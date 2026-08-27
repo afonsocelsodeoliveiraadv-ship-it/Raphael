@@ -29,6 +29,10 @@ jobs:
           sha256sum Sonic3Player_COMPILE_ONLY_REBUILT.zip
           unzip -t Sonic3Player_COMPILE_ONLY_REBUILT.zip
           unzip -q Sonic3Player_COMPILE_ONLY_REBUILT.zip -d workspace
+      - name: Patch Forge 1.20.1 API
+        run: |
+          sed -i 's/SoundEvents\.NOTE_BLOCK_HAT,/SoundEvents.NOTE_BLOCK_HAT.value(),/' workspace/Sonic3Player_PRO_Source/src/main/java/com/raphael/sonic3player/movement/SonicMovementSystem.java
+          grep -n 'NOTE_BLOCK_HAT' workspace/Sonic3Player_PRO_Source/src/main/java/com/raphael/sonic3player/movement/SonicMovementSystem.java
       - name: Build Forge mod
         working-directory: workspace/Sonic3Player_PRO_Source
         run: gradle --no-daemon clean build --stacktrace
