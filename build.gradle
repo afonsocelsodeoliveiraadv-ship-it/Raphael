@@ -1,0 +1,102 @@
+plugins {
+    id 'eclipse'
+    id 'idea'
+    id 'maven-publish'
+    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+}
+
+version = '2.0.0'
+group = 'com.raphael.sonic3player'
+base { archivesName = 'Sonic3Player-PRO' }
+
+// JitPack build bridge: keep the original project as an exact ZIP, unpack it
+// at Gradle configuration time, and point the normal source sets at it.
+def sourceZip = file('Sonic3Player_PRO_Source_v2.zip')
+def extractedRoot = file("${buildDir}/jitpack-source")
+if (!extractedRoot.exists()) {
+    copy {
+        from zipTree(sourceZip)
+        into extractedRoot
+    }
+}
+def projectRoot = file("${extractedRoot}/Sonic3Player_PRO_Source")
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+sourceSets {
+    main {
+        java.srcDirs = [file("${projectRoot}/src/main/java")]
+        resources.srcDirs = [file("${projectRoot}/src/main/resources")]
+    }
+}
+
+minecraft {
+    mappings channel: 'official', version: '1.20.1'
+    copyIdeResources = true
+    runs {
+        configureEach {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+            mods {
+                sonic3player { source sourceSets.main }
+            }
+        }
+        client {}
+        server { args '--nogui' }
+    }
+}
+
+repositories {
+    maven { url = 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/' }
+    maven { url = 'https://maven.geckolib.com' }
+}
+
+dependencies {
+    minecraft 'net.minecraftforge:forge:1.20.1-47.4.10'
+    implementation fg.deobf('software.bernie.geckolib:geckolib-forge-1.20.1:4.8.4')
+}
+
+processResources {
+    def replaceProperties = [
+        minecraft_version: '1.20.1',
+        forge_version: '47.4.10',
+        geckolib_version: '4.8.4',
+        mod_id: 'sonic3player',
+        mod_name: 'Sonic 3 Player PRO',
+        mod_version: '2.0.0'
+    ]
+    inputs.properties replaceProperties
+    filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
+        expand replaceProperties + [project: project]
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+jar {
+    manifest {
+        attributes([
+            'Specification-Title': 'sonic3player',
+            'Specification-Vendor': 'RS Studios',
+            'Specification-Version': '1',
+            'Implementation-Title': 'Sonic 3 Player PRO',
+            'Implementation-Version': '2.0.0',
+            'Implementation-Vendor': 'RS Studios'
+        ])
+    }
+    finalizedBy 'reobfJar'
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId = project.group
+            artifactId = 'Sonic3Player-PRO'
+            version = project.version
+            artifact jar
+        }
+    }
+}
