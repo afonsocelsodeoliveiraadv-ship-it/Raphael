@@ -1,0 +1,47 @@
+name: Build Sonic3Player PRO
+
+on:
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR source
+        uses: actions/checkout@v4
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Setup Gradle 8.8
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.8'
+
+      - name: Verify source ZIP
+        run: |
+          ls -lah
+          file Sonic3Player_PRO_Source_v2.zip
+          unzip -t Sonic3Player_PRO_Source_v2.zip
+
+      - name: Extract source
+        run: unzip -q Sonic3Player_PRO_Source_v2.zip
+
+      - name: Build real Forge JAR
+        working-directory: Sonic3Player_PRO_Source
+        run: |
+          gradle --no-daemon clean build --stacktrace
+          echo '--- BUILD LIBS ---'
+          find build/libs -maxdepth 1 -type f -printf '%f %s bytes\n'
+
+      - name: Upload compiled JAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: Sonic3Player-PRO-2.0.0
+          path: Sonic3Player_PRO_Source/build/libs/*.jar
+          if-no-files-found: error
