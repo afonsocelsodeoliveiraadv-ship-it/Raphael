@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#03060b">
+  <title>S.P.I.D.E.R. LINK</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://unpkg.com/peerjs@1.5.5/dist/peerjs.min.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <canvas id="bg"></canvas>
+  <div class="scanlines"></div>
+  <main class="shell">
+    <header class="topbar panel">
+      <div class="brand"><div class="mark">🕷</div><div><strong>S.P.I.D.E.R. LINK</strong><small>SECURE PEER COMMUNICATION // WEBRTC</small></div></div>
+      <div class="status"><i id="netDot"></i><span id="netStatus">INICIANDO LINK</span></div>
+      <div class="clock"><b id="clock">--:--:--</b><small>ONLINE DESKTOP / MOBILE</small></div>
+    </header>
+    <section class="grid">
+      <aside class="panel identity">
+        <div class="head"><span>01</span><b>IDENTIDADE</b></div>
+        <div class="orb"><i></i><b>LINK</b></div>
+        <p>Seu código desta sessão:</p>
+        <div class="codebox"><code id="myId">GERANDO...</code><button id="copyId">COPIAR</button></div>
+        <p class="muted">Mande este código ao seu amigo. Não é senha e muda quando uma nova sessão é criada.</p>
+        <label>Nome exibido<input id="displayName" maxlength="24" value="RAPHAEL"></label>
+        <button class="wide" id="newId">↻ NOVO CÓDIGO</button>
+      </aside>
+      <section class="panel video-panel">
+        <div class="head"><span>02</span><b>VISOR DE COMUNICAÇÃO</b><em id="callState">STANDBY</em></div>
+        <div class="stage">
+          <video id="remoteVideo" autoplay playsinline></video>
+          <video id="localVideo" autoplay muted playsinline></video>
+          <div class="idle" id="idle"><div class="target"><i></i><b></b></div><strong>AWAITING PEER LINK</strong><small>Conexão de áudio/vídeo criptografada pelo WebRTC</small></div>
+          <div class="corners"><i></i><i></i><i></i><i></i></div>
+          <div class="badge">P2P // DTLS</div>
+        </div>
+        <div class="controls">
+          <button id="micBtn">🎙 MICROFONE</button><button id="camBtn">◉ CÂMERA</button><button id="screenBtn">▣ TELA</button><button class="danger" id="hangBtn">× ENCERRAR</button>
+        </div>
+      </section>
+      <aside class="panel connect">
+        <div class="head"><span>03</span><b>CONECTAR</b></div>
+        <label>Código do seu amigo<input id="peerId" placeholder="Cole o código aqui" autocomplete="off"></label>
+        <div class="action-grid"><button class="accent" id="voiceCall">☎ VOZ</button><button class="accent" id="videoCall">◉ VÍDEO</button><button id="textConnect">⌁ TEXTO</button></div>
+        <div class="security"><b>LINK SECURITY</b><span><i></i> WebRTC peer-to-peer</span><span><i></i> GitHub não recebe o áudio/vídeo</span><span><i></i> Sem API key no site público</span></div>
+        <div class="note"><b>IA DO S.P.I.D.E.R.</b><p>A IA com sua OpenAI API key continua na versão local. Uma chave secreta não deve ser colocada no GitHub Pages.</p></div>
+      </aside>
+    </section>
+    <section class="panel terminal">
+      <div class="head"><span>04</span><b>LINK CHAT</b><em id="chatState">OFFLINE</em></div>
+      <div class="messages" id="messages"></div>
+      <form id="chatForm"><input id="messageInput" maxlength="1500" placeholder="Conecte ao código do seu amigo e envie uma mensagem..."><button>ENVIAR ➤</button></form>
+    </section>
+    <footer class="panel"><span>S.P.I.D.E.R. LINK // GITHUB PAGES BUILD</span><b id="footerText">PEER CORE READY</b><span>VOICE ▸ VIDEO ▸ TEXT ▸ SCREEN</span></footer>
+  </main>
+</body>
+</html>
